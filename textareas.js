@@ -297,7 +297,19 @@ function localMessageHandler(msg, port) {
 	enable_keys = msg.enable_keys;
 	findTextAreas();
 	document.addEventListener("DOMNodeInserted", (function (ev) {
-		    findTextAreas();
+			var targ;
+			if (!ev) var ev = window.event;
+			if (ev.target) targ = ev.target;
+			else if (ev.srcElement) targ = ev.srcElement;
+			if (targ.nodeType == 3) // defeat Safari bug
+				targ = targ.parentNode;
+			if (targ.id == '') {
+				var parentTarg = targ.parentNode;
+				if (parentTarg) targ = parentTarg;
+			}
+			if (targ.id.substr(0,10) != 'nav_sprint') {
+				findTextAreas();
+			}
 		    return true;
 		}), false);
     } else if (cmd == "find_edit") {
